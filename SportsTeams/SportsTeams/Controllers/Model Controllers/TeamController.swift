@@ -8,8 +8,10 @@
 import Foundation
 
 class TeamController {
-    //Properties
+    // MARK: - Properties
+    ///Singleton
     static var sharedInstance = TeamController()
+    ///Source of truth
     var teams = [Team]()
     
     //CRUD functions
@@ -32,6 +34,7 @@ class TeamController {
         sort()
     }
     
+    //Using this, the app sorts by team rank
     func sort() {
         TeamController.sharedInstance.teams = TeamController.sharedInstance.teams.sorted(by: {$0.ranking < $1.ranking})
     }

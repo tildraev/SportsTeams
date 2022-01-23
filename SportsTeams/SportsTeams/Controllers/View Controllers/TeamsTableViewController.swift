@@ -13,6 +13,7 @@ class TeamsTableViewController: UITableViewController {
         super.viewDidLoad()
     }
     
+    //Reload the tableview when the view is about to appear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
@@ -20,10 +21,12 @@ class TeamsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
+    //Sets number of rows in the table view = to the number of "teams" in our source of truth
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TeamController.sharedInstance.teams.count
     }
 
+    //Provides custom cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell", for: indexPath) as? TeamTableViewCell else {return UITableViewCell()}
 
@@ -33,8 +36,8 @@ class TeamsTableViewController: UITableViewController {
 
         return cell
     }
-    
-    // Override to support editing the table view.
+
+    // Allows for swiping and deleting a row
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -50,10 +53,15 @@ class TeamsTableViewController: UITableViewController {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         
+        //Identity
         if segue.identifier == "toDetailVC" {
+            //Index
             if let index = tableView.indexPathForSelectedRow {
+                //Destination
                 if let destination = segue.destination as? DetailViewController {
+                    //Object to send
                     let team = TeamController.sharedInstance.teams[index.row]
+                    //Object that will receive
                     destination.team = team
                 }
             }
