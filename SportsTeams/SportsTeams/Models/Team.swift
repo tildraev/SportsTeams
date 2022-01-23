@@ -19,14 +19,12 @@ class Team {
     }
 }
 
-extension Team: Comparable {
-    static func < (lhs: Team, rhs: Team) -> Bool {
-        lhs.ranking < rhs.ranking
-    }
-
+extension Team: Equatable {
     static func == (lhs: Team, rhs: Team) -> Bool {
-        lhs.ranking == rhs.ranking &&
         lhs.name == rhs.name &&
+        lhs.ranking == rhs.ranking &&
         lhs.playerCount == rhs.playerCount
     }
+    
+    
 }

@@ -20,10 +20,19 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        clearButton.layer.cornerRadius = 5
+        deleteButton.layer.cornerRadius = 5
+        updateViews()
         // Do any additional setup after loading the view.
     }
     
+    func updateViews() {
+        if let team = team {
+            nameTextField.text = team.name
+            rankingTextField.text = String(team.ranking)
+            playerCountTextField.text = String(team.playerCount)
+        }
+    }
     
     @IBAction func clearButtonTapped(_ sender: Any) {
         nameTextField.text = ""
@@ -32,8 +41,25 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func deleteButtonTapped(_ sender: Any) {
+        guard let team = team else {return}
+        TeamController.sharedInstance.deleteTeam(teamToDelete: team)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+        guard let name = nameTextField.text, !name.isEmpty,
+              let rankingString = rankingTextField.text, !rankingString.isEmpty,
+              let playerCountString = playerCountTextField.text, !playerCountString.isEmpty,
+              let ranking = Int(rankingString),
+              let playerCount = Int(playerCountString) else {return}
+        
+        if let team = team {
+            TeamController.sharedInstance.updateTeam(team: team, name: name, ranking: ranking, playerCount: playerCount)
+        }
+        else {
+            TeamController.sharedInstance.createTeam(name: name, ranking: ranking, playerCount: playerCount)
+        }
+        
+        self.navigationController?.popViewController(animated: true)
     }
 }

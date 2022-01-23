@@ -12,6 +12,11 @@ class TeamsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
@@ -20,9 +25,11 @@ class TeamsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell", for: indexPath) as? TeamTableViewCell else {return UITableViewCell()}
 
         // Configure the cell...
+        
+        cell.updateView(team: TeamController.sharedInstance.teams[indexPath.row])
 
         return cell
     }
@@ -31,6 +38,7 @@ class TeamsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
+            TeamController.sharedInstance.teams.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -41,5 +49,14 @@ class TeamsTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "toDetailVC" {
+            if let index = tableView.indexPathForSelectedRow {
+                if let destination = segue.destination as? DetailViewController {
+                    let team = TeamController.sharedInstance.teams[index.row]
+                    destination.team = team
+                }
+            }
+        }
     }
 }

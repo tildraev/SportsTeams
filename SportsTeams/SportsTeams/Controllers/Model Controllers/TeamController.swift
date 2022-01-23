@@ -13,15 +13,26 @@ class TeamController {
     var teams = [Team]()
     
     //CRUD functions
-    func createTeam() {
-        
+    func createTeam(name: String, ranking: Int, playerCount: Int) {
+        let team = Team(name: name, ranking: ranking, playerCount: playerCount)
+        teams.append(team)
+        sort()
     }
     
-    func updateTeam() {
-        
+    func updateTeam(team: Team, name: String, ranking: Int, playerCount: Int) {
+        team.name = name
+        team.ranking = ranking
+        team.playerCount = playerCount
+        sort()
     }
     
-    func deleteTeam() {
-        
+    func deleteTeam(teamToDelete: Team) {
+        guard let index = teams.firstIndex(where: {$0 == teamToDelete}) else {return}
+        teams.remove(at: index)
+        sort()
+    }
+    
+    func sort() {
+        TeamController.sharedInstance.teams = TeamController.sharedInstance.teams.sorted(by: {$0.ranking < $1.ranking})
     }
 }
